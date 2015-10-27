@@ -98,3 +98,6 @@ RSpec.configure do |config|
   Warden.test_mode!
 
 end
+
+
+INSTAGRAM_ACCESS_TOKEN="this is my token" 

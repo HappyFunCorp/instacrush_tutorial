@@ -1,0 +1,37 @@
+.container
+  .page-header
+    = link_to new_instagram_user_path, :class => 'btn btn-primary' do
+      %span.glyphicon.glyphicon-plus
+      New Instagram user
+    %h1 Listing instagram_users
+
+  .table-responsive
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %tr
+          %th User
+          %th Last synced
+          %th Username
+          %th Full name
+          %th Profile picture
+          %th Media count
+          %th Followed count
+          %th Following count
+          %th
+          %th
+          %th
+
+      %tbody
+        - @instagram_users.each do |instagram_user|
+          %tr
+            %td= instagram_user.user
+            %td= instagram_user.last_synced
+            %td= instagram_user.username
+            %td= instagram_user.full_name
+            %td= instagram_user.profile_picture
+            %td= instagram_user.media_count
+            %td= instagram_user.followed_count
+            %td= instagram_user.following_count
+            %td= link_to 'Show', instagram_user
+            %td= link_to 'Edit', edit_instagram_user_path(instagram_user)
+            %td= link_to 'Destroy', instagram_user, :data => { confirm: 'Are you sure?' }, :method => :delete
