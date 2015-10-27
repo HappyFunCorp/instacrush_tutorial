@@ -89,3 +89,4 @@ gem 'devise', '~> 3.4'
 gem 'omniauth'
 gem 'omniauth-instagram'
 gem 'instagram'
+gem 'jazz_hands', github: 'danrabinowitz/jazz_hands', branch: 'use-newer-version-of-pry', groups: [:development, :test]
