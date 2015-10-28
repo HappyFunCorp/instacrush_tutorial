@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  # has_one :instagram_user
+  has_one :instagram_user
 
   has_many :identities, dependent: :destroy
   # Include default devise modules. Others available are:

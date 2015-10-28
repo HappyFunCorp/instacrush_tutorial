@@ -1,0 +1,20 @@
+.container
+  .page-header
+    = link_to instagram_interactions_path, :class => 'btn btn-default' do
+      %span.glyphicon.glyphicon-list-alt
+      Back
+    = link_to edit_instagram_interaction_path(@instagram_interaction), :class => 'btn btn-primary' do
+      %span.glyphicon.glyphicon-pencil
+      Edit
+    %h1 Show instagram_interaction
+
+  %dl.dl-horizontal
+    %dt Instagram media:
+    %dd= @instagram_interaction.instagram_media
+    %dt Instagram user:
+    %dd= @instagram_interaction.instagram_user_id
+    %dt Comment:
+    %dd= @instagram_interaction.comment
+    %dt Is like:
+    %dd= @instagram_interaction.is_like
+

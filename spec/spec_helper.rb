@@ -100,4 +100,4 @@ RSpec.configure do |config|
 end
 
 
-INSTAGRAM_ACCESS_TOKEN="this is my token" 
+INSTAGRAM_ACCESS_TOKEN="509161.38c3f84.10f08b0e76634691b6740ac2420a0b11"

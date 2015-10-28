@@ -1,0 +1,6 @@
+= form_for @instagram_interaction, layout: :horizontal do |f|
+  = f.text_field :instagram_media, :class => 'form-control'
+  = f.number_field :instagram_user_id, :class => 'form-control'
+  = f.text_field :comment, :class => 'form-control'
+  = f.check_box :is_like, :class => 'form-control'
+  = f.submit :class => 'btn btn-primary'

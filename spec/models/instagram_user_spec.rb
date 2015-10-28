@@ -22,4 +22,21 @@ RSpec.describe InstagramUser, type: :model do
     expect( iu.followed_count ).to eq( 191 )
     expect( iu.following_count ).to eq( 224 )
   end
+
+  it "should create a user from a hash" do
+    InstagramUser.from_hash 'username' => 'wschenk', 'full_name' => 'Will Schenk'
+
+    expect( InstagramUser.count ).to eq(1)
+    expect( InstagramUser.first.username ).to eq( 'wschenk' )
+  end
+
+  it "should update the read counts if it find them" do
+    InstagramUser.from_hash "username" => 'wschenk', "full_name" => 'Will Schenk'
+
+    InstagramUser.from_hash "username" => 'wschenk', "full_name" => 'Will Schenk', 'counts' => { 'media' => 100 }
+
+    expect( InstagramUser.count ).to eq(1)
+    expect( InstagramUser.first.username ).to eq( 'wschenk' )
+    expect( InstagramUser.first.media_count ).to eq( 100 )
+  end
 end

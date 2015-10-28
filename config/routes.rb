@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :instagram_interactions
+  resources :instagram_media
   resources :instagram_users
   devise_for :users, class_name: 'FormUser', :controllers => { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
   root 'setup#index'

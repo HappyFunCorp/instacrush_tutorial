@@ -1,0 +1,29 @@
+.container
+  .page-header
+    = link_to new_instagram_interaction_path, :class => 'btn btn-primary' do
+      %span.glyphicon.glyphicon-plus
+      New Instagram interaction
+    %h1 Listing instagram_interactions
+
+  .table-responsive
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %tr
+          %th Instagram media
+          %th Instagram user
+          %th Comment
+          %th Is like
+          %th
+          %th
+          %th
+
+      %tbody
+        - @instagram_interactions.each do |instagram_interaction|
+          %tr
+            %td= instagram_interaction.instagram_media
+            %td= instagram_interaction.instagram_user_id
+            %td= instagram_interaction.comment
+            %td= instagram_interaction.is_like
+            %td= link_to 'Show', instagram_interaction
+            %td= link_to 'Edit', edit_instagram_interaction_path(instagram_interaction)
+            %td= link_to 'Destroy', instagram_interaction, :data => { confirm: 'Are you sure?' }, :method => :delete

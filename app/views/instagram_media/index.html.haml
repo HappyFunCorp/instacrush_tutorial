@@ -1,0 +1,37 @@
+.container
+  .page-header
+    = link_to new_instagram_medium_path, :class => 'btn btn-primary' do
+      %span.glyphicon.glyphicon-plus
+      New Instagram media
+    %h1 Listing instagram_media
+
+  .table-responsive
+    %table.table.table-striped.table-bordered.table-hover
+      %thead
+        %tr
+          %th Instagram user
+          %th Media
+          %th Media type
+          %th Comments count
+          %th Likes count
+          %th Link
+          %th Thumbnail url
+          %th Standard url
+          %th
+          %th
+          %th
+
+      %tbody
+        - @instagram_media.each do |instagram_medium|
+          %tr
+            %td= instagram_medium.instagram_user
+            %td= instagram_medium.media_id
+            %td= instagram_medium.media_type
+            %td= instagram_medium.comments_count
+            %td= instagram_medium.likes_count
+            %td= instagram_medium.link
+            %td= instagram_medium.thumbnail_url
+            %td= instagram_medium.standard_url
+            %td= link_to 'Show', instagram_medium
+            %td= link_to 'Edit', edit_instagram_medium_path(instagram_medium)
+            %td= link_to 'Destroy', instagram_medium, :data => { confirm: 'Are you sure?' }, :method => :delete

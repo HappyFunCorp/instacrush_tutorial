@@ -1,0 +1,11 @@
+.container
+  .page-header
+    = link_to instagram_media_index_path, :class => 'btn btn-default' do
+      %span.glyphicon.glyphicon-list-alt
+      Back
+    = link_to @instagram_medium, :class => 'btn btn-primary' do
+      %span.glyphicon.glyphicon-info-sign
+      Show
+    %h1 Editing instagram_medium
+
+  = render 'form'

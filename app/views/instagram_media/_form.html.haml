@@ -1,0 +1,10 @@
+= form_for @instagram_medium, layout: :horizontal do |f|
+  = f.text_field :instagram_user, :class => 'form-control'
+  = f.text_field :media_id, :class => 'form-control'
+  = f.text_field :media_type, :class => 'form-control'
+  = f.number_field :comments_count, :class => 'form-control'
+  = f.number_field :likes_count, :class => 'form-control'
+  = f.text_field :link, :class => 'form-control'
+  = f.text_field :thumbnail_url, :class => 'form-control'
+  = f.text_field :standard_url, :class => 'form-control'
+  = f.submit :class => 'btn btn-primary'
