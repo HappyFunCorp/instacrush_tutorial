@@ -19,6 +19,7 @@
 // --------------Bootstrap-----------------------------
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
+// @import 'bootstrap/theme';
 
 
 // --------------Global definitions--------------------
@@ -34,11 +35,14 @@
 
 // --------------Components----------------------------
 // Create your own and modify/extend Bootstrap's. For example:
+@import 'components/nav';
 @import 'components/panel';
 @import 'components/crush_pane';
+@import 'components/btn';
 
 
 // --------------Sections------------------------------
 // Page-specific styles. These should *only* be used as a last
 // resort if you really truly can't style your content more generally.
 @import 'sections/profile_page';
+@import 'sections/footer';

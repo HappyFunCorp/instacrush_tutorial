@@ -12,3 +12,13 @@
 //   background-color: $panel-inverse-bg;
 //   color: $panel-inverse-color;
 // }
+
+.panel {
+  margin-bottom: $grid-gutter-width;
+  @include box-shadow(0 5px 4px -4px rgba( 0,0,0,.5));
+}
+
+.thumbnail {
+  margin-bottom: $grid-gutter-width;
+  @include box-shadow(0 5px 4px -4px rgba( 0,0,0,.5));
+}

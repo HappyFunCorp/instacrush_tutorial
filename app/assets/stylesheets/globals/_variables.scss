@@ -4,12 +4,59 @@
 // Variable list: http://getbootstrap.com/customize/
 
 $font-family-sans-serif: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+body { font-weight: 300; }
+$headings-font-family: 'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-// $brand-primary: #ff6000;
-// $body-bg: #747474;
-// $text-color: #d7d7d7;
+// Grid
 
-// $panel-bg: rgba(16,16,16,0.8);
-// $panel-default-border: #000;
-// $panel-default-heading-bg: rgba(64,64,64,0.8);
-// $panel-default-text: #fff;
+$grid-gutter-width: 10px;
+
+
+// Color definitions (play with these)
+
+$background-color: rgb(245, 248, 250);
+$border-color: #d3e0e9;
+$header-color: darken( $border-color, 50% );
+
+// Site colors
+$brand-primary: rgb(48, 151, 209);
+$body-bg: darken( rgb(245, 248, 250), 2% );
+
+// Navbar
+
+$navbar-default-bg: $brand-primary;
+$navbar-default-border: darken( $border-color, 20% );
+$navbar-default-color: lighten( $navbar-default-bg, 40% );
+$navbar-default-brand-color: lighten( $navbar-default-color, 10% );
+$navbar-default-link-color: $navbar-default-color;
+$navbar-default-link-active-color: darken( $navbar-default-link-color, 20% );
+$navbar-default-link-hover-color: $navbar-default-link-active-color;
+$navbar-default-toggle-icon-bar-bg: $navbar-default-border;
+
+
+
+
+// Thumbnail
+
+$thumbnail-bg: white;
+$thumbnail-border: $border-color;
+
+// Panels
+
+$panel-default-border: $border-color;
+$panel-default-heading-bg: $background-color;
+$panel-default-text: $header-color;
+
+
+
+
+// Radii
+
+$border-radius-base:        2px;
+$border-radius-large:       3px;
+$border-radius-small:       1px;
+
+
+
+
+
