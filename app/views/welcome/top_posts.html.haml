@@ -1,0 +1,15 @@
+.container
+  .page-header
+    %h1
+      Top posts
+      %span.small based on interactions
+
+  .row
+    - 15.times do 
+      .col-xs-6.col-sm-4.col-md-3
+        .thumbnail
+          = image_tag "http://placehold.it/350x350"
+
+          .caption
+            %p
+              %b Photos with so many likes

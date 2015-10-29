@@ -1,0 +1,27 @@
+.crush_pane {
+  text-align: center;
+
+  div {
+    display: inline;
+  }
+  .person {
+    img {
+      border-radius: 100%;
+      border: 2px solid gray;
+      max-height: 150px;
+    }
+  }
+
+  .heart {
+    margin-left: -40px;
+    margin-right: -40px;
+    span {
+      postion: relative;
+      top: 30px;
+      color: rgb( 230, 0, 0);
+      font-size: 75px;
+    }
+  }    
+
+  @include clearfix;
+}

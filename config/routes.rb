@@ -1,9 +1,19 @@
 Rails.application.routes.draw do
+  get 'welcome/landing'
+
+  get 'welcome/calculating'
+
+  get 'welcome/show_crush'
+
+  get 'welcome/top_users'
+
+  get 'welcome/top_posts'
+
   resources :instagram_interactions
   resources :instagram_media
   resources :instagram_users
   devise_for :users, class_name: 'FormUser', :controllers => { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
-  root 'setup#index'
+  root 'welcome#landing'
   get '/setup' => 'setup#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

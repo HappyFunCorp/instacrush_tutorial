@@ -1,0 +1,25 @@
+.container
+  .row
+    .center-panel.text-center
+      = panel title: 'Your Crush' do
+        .panel-body
+          .crush_pane
+            .person
+              =image_tag "https://upload.wikimedia.org/wikipedia/en/2/22/MissPiggy.jpg"
+            .heart
+              %span.glyphicon.glyphicon-heart
+            .person
+              =image_tag "https://upload.wikimedia.org/wikipedia/en/6/62/Kermit_the_Frog.jpg"
+
+          .stats
+            %code
+              @user
+            has hearted your photos
+            %b 123 times!
+
+
+      .row
+        .col-xs-6.text-center
+          = link_to "Top Users", welcome_top_users_path, class: "btn btn-primary btn-lg"
+        .col.xs-6.text-center
+          = link_to "Top Posts", welcome_top_posts_path, class: "btn btn-primary btn-lg"

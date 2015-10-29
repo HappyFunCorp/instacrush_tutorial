@@ -1,0 +1,32 @@
+.container
+  .row
+    .col-sm-3
+      = panel title: "Top Users" do
+        .panel-body
+          = nav as: :pills, layout: :stacked do
+            - 5.times do |time|
+              = link_to "#" do
+                = "Person ##{time}"
+                %span.badge= 10-time
+
+    .col-sm-9
+      .row
+        .col-sm-12
+          = panel title: "User Info" do
+            .panel-body.user_info
+              .col-xs-3
+                = image_tag "http://placehold.it/75x75", class: "img-responsive"
+
+              .col-xs-9
+                %p Username has 12 followers, 82 posts.
+                %p Username has liked 15 of your photos, and made 92 comments.
+
+      .row
+        - 15.times do 
+          .col-xs-6.col-sm-4.col-md-3
+            .thumbnail
+              = image_tag "http://placehold.it/350x350"
+
+              .caption
+                %p
+                  %b Photos with so many likes
