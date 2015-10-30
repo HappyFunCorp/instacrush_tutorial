@@ -2,6 +2,7 @@ class InstagramUser < ActiveRecord::Base
   belongs_to :user
 
   has_many :posts, class_name: 'InstagramMedia'
+  has_many :interactions, through: :posts, class_name: "InstagramInteraction"
 
   def nearby_users
     query = InstagramUser #.select "instagram_users.*"
@@ -32,5 +33,16 @@ class InstagramUser < ActiveRecord::Base
     u.save
 
     u
+  end
+
+  def top_interactors
+    interactions.
+      select( [
+              "instagram_interactions.instagram_user_id", 
+              "count(*) as count",
+              "sum(case is_like when 't' then 1 else 0 end) as liked"
+              ].join( ',') ).
+      group( :instagram_user_id ).
+      order( "count desc" )
   end
 end

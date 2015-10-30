@@ -10,5 +10,7 @@ class CreateInstagramInteractions < ActiveRecord::Migration
     end
     add_index :instagram_interactions, :instagram_user_id
     add_index :instagram_interactions, :is_like
+    # This is for pgsql.  Remove foreign_key: true above and replace with this
+    # add_foreign_key :instagram_interactions, :instagram_media, column: :instagram_media_id
   end
 end
