@@ -1,37 +1,24 @@
 .container
   .page-header
-    = link_to new_instagram_medium_path, :class => 'btn btn-primary' do
-      %span.glyphicon.glyphicon-plus
-      New Instagram media
-    %h1 Listing instagram_media
+    %h1
+      Top posts
+      %span.small based on interactions
 
-  .table-responsive
-    %table.table.table-striped.table-bordered.table-hover
-      %thead
-        %tr
-          %th Instagram user
-          %th Media
-          %th Media type
-          %th Comments count
-          %th Likes count
-          %th Link
-          %th Thumbnail url
-          %th Standard url
-          %th
-          %th
-          %th
+  .row
+    - @instagram_media.each do |post|
+      .col-xs-6.col-sm-4.col-md-3
+        .thumbnail
+          = link_to post.link do
+            = image_tag post.standard_url
 
-      %tbody
-        - @instagram_media.each do |instagram_medium|
-          %tr
-            %td= instagram_medium.instagram_user
-            %td= instagram_medium.media_id
-            %td= instagram_medium.media_type
-            %td= instagram_medium.comments_count
-            %td= instagram_medium.likes_count
-            %td= instagram_medium.link
-            %td= instagram_medium.thumbnail_url
-            %td= instagram_medium.standard_url
-            %td= link_to 'Show', instagram_medium
-            %td= link_to 'Edit', edit_instagram_medium_path(instagram_medium)
-            %td= link_to 'Destroy', instagram_medium, :data => { confirm: 'Are you sure?' }, :method => :delete
+          .caption
+            %p
+              = post.likes_count
+              likes,
+              = time_ago_in_words post.created_at
+              ago.
+
+            / %p
+            /   Interacted with by:
+            /   - post.interactions.each do |i|
+            /     = link_to i.instagram_user.username, i.instagram_user

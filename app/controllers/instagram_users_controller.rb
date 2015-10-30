@@ -1,48 +1,29 @@
- 
- 
 class InstagramUsersController < ApplicationController
-  before_action :set_instagram_user, only: [:show, :edit, :update, :destroy]
-
-  respond_to :html, :json, :js
-
+  before_filter :require_instagram_user
+  before_filter :require_fresh_user, only: [:index]
+  before_action :load_stats
+ 
   def index
-    @instagram_users = InstagramUser.all
-  end 
+  end
 
   def show
-  end 
-
-  def new 
-    @instagram_user = InstagramUser.new
-  end 
-
-  def edit
-  end 
-
-  def create
-    @instagram_user = InstagramUser.new(instagram_user_params)
-    @instagram_user.save
-    respond_with(@instagram_user)
-  end 
-
-  def update
-    @instagram_user.update(instagram_user_params)
-    flash[:notice] = 'Instagram user was successfully updated.'
-    respond_with(@instagram_user)
-  end 
-
-  def destroy
-    @instagram_user.destroy
-    redirect_to instagram_users_url, notice: 'Instagram user was successfully destroyed.'
-  end 
+    @user = InstagramUser.find( params[:id] )
+    @instagram_media = @instagram_user.
+      posts.
+      joins( :interactions ).
+      where( instagram_interactions: { instagram_user_id: @user.id } ).
+      order( "likes_count desc")
+    render :index
+  end
 
   private
-    def set_instagram_user
-      @instagram_user = InstagramUser.find(params[:id])
-    end 
-
-    def instagram_user_params
-      params.require(:instagram_user).permit(:user_id, :last_synced, :username, :full_name, :profile_picture, :media_count, :followed_count, :following_count) 
-    end 
+  def load_stats
+    @instagram_user = current_user.instagram_user
+    @top_users = @instagram_user.top_interactors.limit( 10 )
+    @user_hash = {}
+    InstagramUser.where( "id in (?)", @top_users.collect { |x| x[:instagram_user_id] } ).each do |user|
+      @user_hash[user.id] = user
+    end
+    @instagram_media = @instagram_user.posts.order( "likes_count desc" )
+  end
 end
- 

@@ -6,16 +6,11 @@ Rails.application.routes.draw do
   end
   get 'welcome/landing'
 
-  # get 'welcome/calculating'
-  # get 'welcome/show_crush'
+  # resources :instagram_interactions
 
-  get 'welcome/top_users'
+  resources :instagram_media, only: [:index, :show], path: 'instagram/posts'
+  resources :instagram_users, only: [:index, :show], path: 'instagram/users'
 
-  get 'welcome/top_posts'
-
-  resources :instagram_interactions
-  resources :instagram_media
-  resources :instagram_users
   devise_for :users, class_name: 'FormUser', :controllers => { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
   root 'welcome#landing'
   get '/setup' => 'setup#index'
