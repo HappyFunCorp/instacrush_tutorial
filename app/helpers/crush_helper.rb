@@ -1,0 +1,2 @@
+module CrushHelper
+end

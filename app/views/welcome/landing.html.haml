@@ -16,4 +16,4 @@
 
 
       .signin
-        = button_to "Link with instagram", welcome_calculating_path, class: "btn btn-default btn-lg", method: :get
+        = button_to "Link with instagram", user_omniauth_authorize_path(:instagram), class: "btn btn-default btn-lg"

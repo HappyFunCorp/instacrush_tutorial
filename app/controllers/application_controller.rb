@@ -12,4 +12,24 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def require_instagram_user
+    if current_user.nil? || current_user.instagram.nil?
+      store_location_for( :user, request.path )
+      redirect_to user_omniauth_authorize_path( :instagram )
+      return false
+    elsif current_user.instagram_user.nil?
+      redirect_to crush_index_path
+      return false
+    end
+  end
+
+  def require_fresh_user
+    iu = current_user.instagram_user
+    if iu.last_synced.nil? || iu.last_synced < 12.hours.ago
+      InstagramMedia.recent_feed_for_user current_user
+      iu.update_attribute :last_synced, Time.now
+      flash[:notice] = "We've spoken to instagram"
+    end
+  end
 end

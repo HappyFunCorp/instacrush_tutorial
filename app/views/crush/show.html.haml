@@ -1,21 +1,26 @@
 .container
   .row
     .center-panel.text-center
-      = panel title: 'Your Crush' do
+      = panel title: "@#{@crush.instagram_user.username}'s Crush" do
         .panel-body
           .crush_pane
             .person
-              =image_tag "https://upload.wikimedia.org/wikipedia/en/2/22/MissPiggy.jpg"
+              = image_tag @crush.crush_user.profile_picture
             .heart
               %span.glyphicon.glyphicon-heart
             .person
-              =image_tag "https://upload.wikimedia.org/wikipedia/en/6/62/Kermit_the_Frog.jpg"
+              = image_tag @crush.instagram_user.profile_picture
 
           .stats
+            %code= "@#{@crush.crush_user.username}"
+            has hearted 
+            %b= @crush.likes_count
+            and commented on
+            %b= @crush.comments_count
+            of 
             %code
-              @user
-            has hearted your photos
-            %b 123 times!
+              ="@#{@crush.instagram_user.username}'s"
+            recent photos!
 
 
       .row

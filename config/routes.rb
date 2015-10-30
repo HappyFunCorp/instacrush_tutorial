@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
+  resources :crush, only: [:index, :show] do
+    collection do
+      get 'loading'
+    end
+  end
   get 'welcome/landing'
 
-  get 'welcome/calculating'
-
-  get 'welcome/show_crush'
+  # get 'welcome/calculating'
+  # get 'welcome/show_crush'
 
   get 'welcome/top_users'
 

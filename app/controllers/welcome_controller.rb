@@ -1,5 +1,8 @@
 class WelcomeController < ApplicationController
   def landing
+    if current_user.present?
+      redirect_to crush_index_path
+    end
   end
 
   def calculating
