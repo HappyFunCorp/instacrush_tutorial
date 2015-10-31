@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :crush, only: [:index, :show] do
+  resources :crush, only: [:index, :show], param: :slug do
     collection do
       get 'loading'
     end
@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # resources :instagram_interactions
 
   resources :instagram_media, only: [:index, :show], path: 'instagram/posts'
-  resources :instagram_users, only: [:index, :show], path: 'instagram/users'
+  resources :instagram_users, only: [:index, :show], path: 'instagram/users', param: :username
 
   devise_for :users, class_name: 'FormUser', :controllers => { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
   root 'welcome#landing'

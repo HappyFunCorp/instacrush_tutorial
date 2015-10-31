@@ -7,7 +7,7 @@ class CrushController < ApplicationController
   end
 
   def show
-    @crush = Crush.find( params[:id] )
+    @crush = Crush.find_by_slug( params[:slug] )
   end
 
   def loading

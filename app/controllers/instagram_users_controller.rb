@@ -7,7 +7,7 @@ class InstagramUsersController < ApplicationController
   end
 
   def show
-    @user = InstagramUser.find( params[:id] )
+    @user = InstagramUser.find_by_username( params[:username] )
     @instagram_media = @instagram_user.
       posts.
       joins( :interactions ).

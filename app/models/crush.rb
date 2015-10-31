@@ -1,4 +1,7 @@
 class Crush < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :slug, use: :slugged
+
   belongs_to :user
   belongs_to :instagram_user
   belongs_to :crush_user, class_name: InstagramUser
@@ -18,6 +21,7 @@ class Crush < ActiveRecord::Base
     # Always update likes and comments count if needed
     c.likes_count = likes
     c.comments_count = interactions - likes
+    c.slug = "#{c.instagram_user.username} #{c.crush_user.username}".hash.abs.to_s(36)
 
     c.save
 

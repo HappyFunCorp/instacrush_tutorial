@@ -1,8 +1,15 @@
 class InstagramUser < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :username, use: :slugged
+
   belongs_to :user
 
   has_many :posts, class_name: 'InstagramMedia'
   has_many :interactions, through: :posts, class_name: "InstagramInteraction"
+
+  def slug
+    username
+  end
 
   def nearby_users
     query = InstagramUser #.select "instagram_users.*"
