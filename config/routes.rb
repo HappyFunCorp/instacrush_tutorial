@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    # get "/stats" => "stats#stats"
+    devise_scope :admin_user do
+      get '/stats/:scope' => "stats#stats", as: :admin_stats
+    end
+  end
+
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   resources :crush, only: [:index, :show], param: :slug do
     collection do
       get 'loading'

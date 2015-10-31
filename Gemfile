@@ -91,3 +91,6 @@ gem 'omniauth-instagram'
 gem 'instagram'
 gem 'jazz_hands', github: 'danrabinowitz/jazz_hands', branch: 'use-newer-version-of-pry', groups: [:development, :test]
 gem 'friendly_id'
+gem 'activeadmin', github: 'activeadmin', branch: 'master'
+gem 'inherited_resources'
+gem 'dateslices'
