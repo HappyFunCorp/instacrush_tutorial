@@ -13,42 +13,28 @@ ActiveAdmin.register_page "Dashboard" do
 
     columns do
       column do
-        panel "Twitter" do
+        panel "Instagram Users" do
           render partial: "admin/chart", locals: { scope: 'instagram_users' }
         end
       end
       column do
-        panel "Instagram" do
-          render partial: "admin/chart", locals: { scope: 'twitter_users' }
+        panel "Crushes" do
+          render partial: "admin/chart", locals: { scope: 'crushes' }
+        end
+      end
+    end
+
+    columns do
+      column do
+        panel "Likes" do
+          render partial: "admin/chart", locals: { scope: 'likes' }
+        end
+      end
+      column do
+        panel "Comments" do
+          render partial: "admin/chart", locals: { scope: 'comments' }
         end
       end
     end
   end
-    # div class: "blank_slate_container", id: "dashboard_default_message" do
-    #   span class: "blank_slate" do
-    #     span I18n.t("active_admin.dashboard_welcome.welcome")
-    #     small I18n.t("active_admin.dashboard_welcome.call_to_action")
-    #   end
-    # end
-
-    # Here is an example of a simple dashboard with columns and panels.
-    #
-    # columns do
-    #   column do
-    #     panel "Recent Posts" do
-    #       ul do
-    #         Post.recent(5).map do |post|
-    #           li link_to(post.title, admin_post_path(post))
-    #         end
-    #       end
-    #     end
-    #   end
-
-    #   column do
-    #     panel "Info" do
-    #       para "Welcome to ActiveAdmin."
-    #     end
-    #   end
-    # end
-  # end # content
 end

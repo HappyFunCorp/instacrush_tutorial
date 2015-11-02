@@ -7,8 +7,15 @@ class Admin::StatsController < ApplicationController
     else
       cls = User
       cls = Identity.where( "provider = ?", "twitter" ) if params[:scope] == 'twitter_users'
-      cls = Identity.where( "provider = ?", "instagram" ) if params[:scope] == 'instagram_users'
-      ret = cls.group_by_month
+      cls = InstagramUser if params[:scope] == 'instagram_users'
+      cls = Crush if params[:scope] == 'crushes'
+      ret = cls.group_by_day
+
+      if params[:scope] == 'likes' || params[:scopes] == 'comments'
+        cls = InstagramInteraction.where( "is_like = ?", params[:scope] == 'likes' )
+        ret = cls.group_by_day :updated_at
+      end
+
       render json: ret
     end
   end
