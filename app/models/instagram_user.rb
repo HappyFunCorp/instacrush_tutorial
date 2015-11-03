@@ -63,15 +63,21 @@ class InstagramUser < ActiveRecord::Base
 
   def sync_if_needed
     if sync_needed?
-      update_attribute( :state, "queued" )
-      UpdateUserFeedJob.perform_later( self.user.id )
+      sync!
     end
+  end
+
+  def sync!
+    update_attribute :state, "queued"
+    UpdateUserFeedJob.perform_later( self.user.id )
   end
 
   def self.sync_feed_from_user user
     if user.instagram_user.nil?
       InstagramUser.create( user: user, username: user.instagram.nickname, state: "queued" )
+      user.reload
     end
-    UpdateUserFeedJob.perform_later( user.id )
+
+    user.instagram_user.sync!
   end
 end

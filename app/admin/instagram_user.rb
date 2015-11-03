@@ -22,6 +22,7 @@ ActiveAdmin.register InstagramUser  do
     column :media_count
     column :followed_count
     column :following_count
+    column :last_synced
     column :created_at
     actions do |user|
       link_to "Sync", load_info_admin_instagram_user_path( user ), method: :put 

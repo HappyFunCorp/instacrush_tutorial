@@ -13,7 +13,7 @@ class CrushController < ApplicationController
   def loading
     iu = current_user.instagram_user
     if iu.state == "synced"
-        redirect_to Crush.find_for_user( current_user )
+      redirect_to Crush.find_for_user( current_user )
     end
   end
 end
