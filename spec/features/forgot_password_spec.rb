@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 feature "ForgotPasswords", :type => :feature do
+  before { skip "No account system yet" }
+
   it "should reset your password" do
     user = create :user
 

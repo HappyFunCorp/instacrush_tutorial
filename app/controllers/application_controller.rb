@@ -18,18 +18,18 @@ class ApplicationController < ActionController::Base
       store_location_for( :user, request.path )
       redirect_to user_omniauth_authorize_path( :instagram )
       return false
-    elsif current_user.instagram_user.nil?
-      redirect_to crush_index_path
-      return false
     end
   end
 
   def require_fresh_user
-    iu = current_user.instagram_user
-    if iu.last_synced.nil? || iu.last_synced < 12.hours.ago
-      InstagramMedia.recent_feed_for_user current_user
-      iu.update_attribute :last_synced, Time.now
-      flash[:notice] = "We've spoken to instagram"
+    if current_user.should_sync?
+      InstagramUser.sync_feed_from_user current_user
+
+      flash[:notice] = "We're talking with instagram right now"
+      if request.path != loading_crush_index_path
+        redirect_to loading_crush_index_path
+        return false
+      end
     end
   end
 end

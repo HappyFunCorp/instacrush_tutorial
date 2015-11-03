@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 feature "Registrations", :type => :feature do
+  before { skip "No account system yet" }
   include Warden::Test::Helpers
 
   after{ Warden.test_reset! }

@@ -39,4 +39,33 @@ RSpec.describe InstagramUser, type: :model do
     expect( InstagramUser.first.username ).to eq( 'wschenk' )
     expect( InstagramUser.first.media_count ).to eq( 100 )
   end
+
+  context "needing syncing" do
+    it "a new object should be stale" do
+      iu = create( :instagram_user )
+      expect( iu.stale? ).to be_truthy
+    end
+
+    it "an object synced more than 12 hours ago should be stale" do
+      iu = create( :instagram_user, last_synced: 13.hours.ago )
+      expect( iu.stale? ).to be_truthy
+    end
+
+    it "an object synced 1 hours ago should not be stale" do
+      iu = create( :instagram_user, last_synced: 1.hour.ago )
+      expect( iu.stale? ).to be_falsey
+    end
+  end
+
+  context "syncing" do
+    before( :each ) do
+      expect( instagram_auth ).to_not be_nil
+    end
+
+    it "should trigger a sync for a stale user" do
+      assert_enqueued_with( job: UpdateUserFeedJob ) do
+        InstagramUser.sync_feed_from_user user
+      end
+    end
+  end
 end

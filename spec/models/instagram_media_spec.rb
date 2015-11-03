@@ -2,12 +2,8 @@ require 'rails_helper'
 
 RSpec.describe InstagramMedia, type: :model do
   let( :user ) { create( :user ) }
-  let( :instagram_auth ) { create( :identity, provider: :instagram, user: user, accesstoken: INSTAGRAM_ACCESS_TOKEN ) }
+  let!( :instagram_auth ) { create( :identity, provider: :instagram, user: user, accesstoken: INSTAGRAM_ACCESS_TOKEN ) }
  
-  before( :each ) do 
-    expect( instagram_auth ).to_not be_nil
-  end
-
   it "should load in media objects for the user" do
     expect( InstagramMedia.count ).to eq( 0 )
 
