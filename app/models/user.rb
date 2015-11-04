@@ -18,4 +18,12 @@ class User < ActiveRecord::Base
   def should_sync?
     instagram_user.nil? || instagram_user.sync_needed?
   end
+
+  def find_instagram_user
+    if instagram_user.nil?
+      self.instagram_user = InstagramUser.sync_from_user( self )
+    end
+
+    instagram_user
+  end
 end

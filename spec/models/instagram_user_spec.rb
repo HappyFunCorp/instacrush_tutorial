@@ -15,6 +15,7 @@ RSpec.describe InstagramUser, type: :model do
     iu = InstagramUser.where( user_id: user.id ).first
 
     expect( iu ).to_not be_nil
+    expect( iu.remote_id ).to eq( "509161" )
     expect( iu.username ).to eq( "wschenk" )
     expect( iu.full_name ).to eq( "Will Schenk" )
     expect( iu.profile_picture ).to eq( "http://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-19/11374591_955491831180543_1527410442_a.jpg" )
@@ -31,12 +32,13 @@ RSpec.describe InstagramUser, type: :model do
   end
 
   it "should update the read counts if it find them" do
-    InstagramUser.from_hash "username" => 'wschenk', "full_name" => 'Will Schenk'
+    InstagramUser.from_hash "username" => 'wschenk', "full_name" => 'Will Schenk', "id" => "509161"
 
     InstagramUser.from_hash "username" => 'wschenk', "full_name" => 'Will Schenk', 'counts' => { 'media' => 100 }
 
     expect( InstagramUser.count ).to eq(1)
     expect( InstagramUser.first.username ).to eq( 'wschenk' )
+    expect( InstagramUser.first.remote_id ).to eq( "509161" )
     expect( InstagramUser.first.media_count ).to eq( 100 )
   end
 

@@ -28,7 +28,7 @@ RSpec.describe UpdateUserFeedJob, type: :job do
   it "should actually sync the users feed" do
     expect( InstagramMedia.count ).to eq( 0 )
 
-    VCR.use_cassette 'instagram/recent_feed_for_user' do
+    VCR.use_cassette 'instagram/recent_feed_for_user_job' do
       UpdateUserFeedJob.perform_now( user.id )
     end
 

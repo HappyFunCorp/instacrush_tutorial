@@ -11,16 +11,17 @@ class InstagramMedia < ActiveRecord::Base
     interactions.where( is_like: true )
   end
 
-  def self.recent_feed_for_user( user )
-    self_user = InstagramUser.sync_from_user( user )
-
-    user.instagram_client.user_recent_media.each do |media|
-      InstagramMedia.reify( media, self_user, user.instagram_client )
+  def self.recent_feed_for_user( instagram_client, instagram_user )
+    instagram_client.user_recent_media( instagram_user.remote_id ).each do |media|
+      self.reify( media )
     end
   end
 
-  def self.reify( media, instagram_user, client )
+  def self.reify( media )
+    instagram_user = InstagramUser.from_hash media['user']
+
     p = where( media_id: media['id'] ).first_or_create
+
     p.instagram_user = instagram_user
     p.media_type = media['type']
     p.link = media['link']
@@ -30,6 +31,8 @@ class InstagramMedia < ActiveRecord::Base
     p.likes_count = media['likes']['count']
     p.created_at = Time.at( media['created_time'].to_i )
 
+    p.save
+
     media['comments']['data'].each do |comment|
       commentor = InstagramUser.from_hash( comment['from'] )
       InstagramInteraction.where( instagram_media_id: p.id, instagram_user_id: commentor.id, is_like: false ).first_or_create do |interaction|
@@ -37,12 +40,12 @@ class InstagramMedia < ActiveRecord::Base
         interaction.created_at = Time.at( comment['created_time'].to_i )
       end
     end
+  end
 
-    client.media_likes( media['id'] ).each do |like|
+  def load_interaction_data( instagram_client )
+    instagram_client.media_likes( media_id ).each do |like|
       liker = InstagramUser.from_hash( like )
-      InstagramInteraction.where( instagram_media_id: p.id, instagram_user_id: liker.id, is_like: true ).first_or_create
+      InstagramInteraction.where( instagram_media_id: id, instagram_user_id: liker.id, is_like: true ).first_or_create
     end
-
-    p.save
   end
 end

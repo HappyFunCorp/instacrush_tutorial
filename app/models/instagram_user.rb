@@ -28,6 +28,7 @@ class InstagramUser < ActiveRecord::Base
   def self.from_hash user_info, user = nil
     u = where( :username => user_info['username']).first_or_create
     u.user_id = user.id if user
+    u.remote_id ||= user_info['id']
     u.username = user_info['username']
     u.full_name = user_info['full_name']
     u.profile_picture = user_info['profile_picture']

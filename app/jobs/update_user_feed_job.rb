@@ -4,7 +4,11 @@ class UpdateUserFeedJob < ActiveJob::Base
   def perform( user_id )
     user = User.find user_id
 
-    InstagramMedia.recent_feed_for_user user
+    InstagramMedia.recent_feed_for_user user.instagram_client, user.find_instagram_user
+
+    user.find_instagram_user.posts.each do |post|
+      post.load_interaction_data( user.instagram_client )
+    end
 
     user.reload
     

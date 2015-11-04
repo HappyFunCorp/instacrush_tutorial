@@ -8,7 +8,7 @@ RSpec.describe InstagramMedia, type: :model do
     expect( InstagramMedia.count ).to eq( 0 )
 
     VCR.use_cassette 'instagram/recent_feed_for_user' do
-      InstagramMedia.recent_feed_for_user( user )
+      InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
     end
 
     expect( InstagramMedia.count ).to_not eq(0)
@@ -16,21 +16,21 @@ RSpec.describe InstagramMedia, type: :model do
 
   it "should add data to the media object" do
     VCR.use_cassette 'instagram/recent_feed_for_user' do
-      InstagramMedia.recent_feed_for_user( user )
+      InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
     end
 
     media = InstagramMedia.all.first
 
     expect( media ).to_not be_nil
-    expect( media.media_id ).to eq( "1103152031012554955_509161" )
+    expect( media.media_id ).to eq( "1109367881914714505_509161" )
     expect( media.media_type ).to eq( "image" )
     expect( media.comments_count ).to eq( 0 )
-    expect( media.likes_count ).to eq( 18 )
+    expect( media.likes_count ).to eq( 7 )
   end
 
   it "each post should have an associated instagram user" do
     VCR.use_cassette 'instagram/recent_feed_for_user' do
-      InstagramMedia.recent_feed_for_user( user )
+      InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
     end
 
     InstagramMedia.all.each do |a|
@@ -40,8 +40,11 @@ RSpec.describe InstagramMedia, type: :model do
 
   context "relationships" do
     before( :each ) do
-      VCR.use_cassette 'instagram/recent_feed_for_user' do
-        InstagramMedia.recent_feed_for_user( user )
+      VCR.use_cassette 'instagram/recent_feed_for_user_with_interactions' do
+        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
+        user.find_instagram_user.posts.each do |post|
+          post.load_interaction_data( user.instagram_client )
+        end
       end
     end
 
@@ -62,7 +65,7 @@ RSpec.describe InstagramMedia, type: :model do
     it "should associate likes with a post" do
       post = InstagramMedia.first
       expect( post ).to_not be_nil
-      expect( post.likes.count ).to eq( 18 )
+      expect( post.likes.count ).to eq( 7 )
     end
 
     it "should know the users surrounding the user" do
@@ -74,8 +77,11 @@ RSpec.describe InstagramMedia, type: :model do
 
   context "comments" do
     before( :each ) do
-      VCR.use_cassette 'instagram/recent_feed_for_user' do
-        InstagramMedia.recent_feed_for_user( user )
+      VCR.use_cassette 'instagram/recent_feed_for_user_with_interactions' do
+        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
+        # user.find_instagram_user.posts.each do |post|
+        #   post.load_interaction_data( user.instagram_client )
+        # end
       end
     end
 
@@ -84,14 +90,17 @@ RSpec.describe InstagramMedia, type: :model do
     end
 
     it "should have created many instagram interactions" do
-      expect( InstagramInteraction.count ).to be > 0
+      expect( InstagramInteraction.where( is_like: false ).count ).to be > 0
     end
   end
 
   context "interactions" do
     before( :each ) do
-      VCR.use_cassette 'instagram/recent_feed_for_user' do
-        InstagramMedia.recent_feed_for_user( user )
+      VCR.use_cassette 'instagram/recent_feed_for_user_with_interactions' do
+        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
+        user.find_instagram_user.posts.each do |post|
+          post.load_interaction_data( user.instagram_client )
+        end
       end
     end
 
