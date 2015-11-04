@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe UpdateUserFeedJob, type: :job do
+RSpec.describe SyncInteractionInfoJob, type: :job do
   let( :user ) { create( :user ) }
   let!( :instagram_auth ) { create( :identity, provider: :instagram, user: user, accesstoken: INSTAGRAM_ACCESS_TOKEN ) }
   let!( :instagram_user ) { create( :instagram_user, username: 'wschenk', user: user ) }
  
   it "should create a job when requesting a synched user" do
-    assert_enqueued_with( job: UpdateUserFeedJob ) do
+    assert_enqueued_with( job: SyncInteractionInfoJob ) do
       expect( instagram_user.sync_interaction_info ).to be_truthy
     end
 
@@ -14,7 +14,7 @@ RSpec.describe UpdateUserFeedJob, type: :job do
   end
 
   it "should not double enqueue a job" do
-    assert_enqueued_with( job: UpdateUserFeedJob ) do
+    assert_enqueued_with( job: SyncInteractionInfoJob ) do
       expect( instagram_user.sync_interaction_info ).to be_truthy
     end
 
@@ -29,7 +29,8 @@ RSpec.describe UpdateUserFeedJob, type: :job do
     expect( InstagramMedia.count ).to eq( 0 )
 
     VCR.use_cassette 'instagram/recent_feed_for_user_job' do
-      UpdateUserFeedJob.perform_now( user.id )
+      instagram_user = user.find_instagram_user
+      SyncInteractionInfoJob.perform_now( instagram_user.id, user.id )
     end
 
     instagram_user.reload

@@ -65,7 +65,7 @@ RSpec.describe InstagramUser, type: :model do
     end
 
     it "should trigger a sync for a stale user" do
-      assert_enqueued_with( job: UpdateUserFeedJob ) do
+      assert_enqueued_with( job: SyncInteractionInfoJob ) do
         VCR.use_cassette 'instagram/user_sync' do
           user.find_instagram_user.sync_interaction_info
         end

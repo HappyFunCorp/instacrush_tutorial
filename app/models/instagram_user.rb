@@ -76,10 +76,17 @@ class InstagramUser < ActiveRecord::Base
         send( "sync_#{attribute}!" )
       end
     end
+
+    define_method :"sync_#{attribute}!" do
+      update_attribute :"#{attribute}_queued_at", Time.now
+      update_attribute :"#{attribute}_state", "queued"
+      eval( "Sync#{attribute.to_s.camelize}Job" ).perform_later( self.id, self.user.id )
+    end
   end
 
-  def sync_interaction_info!
-    update_attribute :interaction_info_state, "queued"
-    UpdateUserFeedJob.perform_later( self.user.id )
-  end
+  # def sync_interaction_info!
+  #   update_attribute :interaction_info_queued_at, Time.now
+  #   update_attribute :interaction_info_state, "queued"
+  #   SyncInteractionInfoJob.perform_later( self.id, self.user.id )
+  # end
 end

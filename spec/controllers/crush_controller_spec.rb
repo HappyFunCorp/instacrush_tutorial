@@ -41,7 +41,7 @@ RSpec.describe CrushController, :type => :controller do
     end
 
     it "should queue up the syncing job when you get the index page" do
-      assert_enqueued_with( job: UpdateUserFeedJob ) do
+      assert_enqueued_with( job: SyncInteractionInfoJob ) do
         VCR.use_cassette 'instagram/user_sync' do
           get :index
         end
@@ -54,7 +54,7 @@ RSpec.describe CrushController, :type => :controller do
     end
 
     it "should queue up the syncing job if you hit the loading page first" do
-      assert_enqueued_with( job: UpdateUserFeedJob ) do
+      assert_enqueued_with( job: SyncInteractionInfoJob ) do
         VCR.use_cassette 'instagram/user_sync' do
           get :loading
         end
@@ -100,7 +100,7 @@ RSpec.describe CrushController, :type => :controller do
     end
 
     it "index should redirect to their crush" do
-      assert_enqueued_with( job: UpdateUserFeedJob ) do
+      assert_enqueued_with( job: SyncInteractionInfoJob ) do
         get :index
       end
       expect( response ).to redirect_to( loading_crush_index_path )
