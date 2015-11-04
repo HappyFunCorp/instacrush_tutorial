@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104162344) do
+ActiveRecord::Schema.define(version: 20151104214002) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -124,17 +124,39 @@ ActiveRecord::Schema.define(version: 20151104162344) do
 
   create_table "instagram_users", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "last_synced"
     t.string   "username"
     t.string   "full_name"
     t.string   "profile_picture"
     t.integer  "media_count"
     t.integer  "followed_count"
     t.integer  "following_count"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.string   "state"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "remote_id"
+    t.string   "user_info_state"
+    t.datetime "user_info_queued_at"
+    t.datetime "user_info_started_at"
+    t.datetime "user_info_finished_at"
+    t.string   "feed_info_state"
+    t.datetime "feed_info_queued_at"
+    t.datetime "feed_info_started_at"
+    t.datetime "feed_info_finished_at"
+    t.string   "interaction_info_state"
+    t.datetime "interaction_info_queued_at"
+    t.datetime "interaction_info_started_at"
+    t.datetime "interaction_info_finished_at"
+    t.string   "followers_info_state"
+    t.datetime "followers_info_queued_at"
+    t.datetime "followers_info_started_at"
+    t.datetime "followers_info_finished_at"
+    t.string   "member_since_state"
+    t.datetime "member_since_queued_at"
+    t.datetime "member_since_started_at"
+    t.datetime "member_since_finished_at"
+    t.string   "user_likes_state"
+    t.datetime "user_likes_queued_at"
+    t.datetime "user_likes_started_at"
+    t.datetime "user_likes_finished_at"
   end
 
   add_index "instagram_users", ["user_id"], name: "index_instagram_users_on_user_id"

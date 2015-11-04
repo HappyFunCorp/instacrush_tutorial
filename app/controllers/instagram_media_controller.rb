@@ -1,6 +1,6 @@
 class InstagramMediaController < ApplicationController
   before_filter :require_instagram_user
-  before_filter :require_fresh_user, only: [:index]
+  # before_filter :require_fresh_user, only: [:index]
   before_action :set_instagram_medium, only: [:show]
 
   def index

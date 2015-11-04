@@ -15,10 +15,6 @@ class User < ActiveRecord::Base
     @instagram_client ||= Instagram.client( access_token: instagram.accesstoken )
   end
 
-  def should_sync?
-    instagram_user.nil? || instagram_user.sync_needed?
-  end
-
   def find_instagram_user
     if instagram_user.nil?
       self.instagram_user = InstagramUser.sync_from_user( self )

@@ -1,6 +1,6 @@
 class InstagramUsersController < ApplicationController
   before_filter :require_instagram_user
-  before_filter :require_fresh_user, only: [:index]
+  # before_filter :require_fresh_user, only: [:index]
   before_action :load_stats
  
   def index

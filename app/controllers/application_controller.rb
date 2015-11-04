@@ -21,9 +21,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def require_fresh_user
-    if current_user.should_sync?
-      InstagramUser.sync_feed_from_user current_user
+  def require_fresh_interactions
+    if current_user.find_instagram_user.sync_interaction_info_needed?
+      current_user.find_instagram_user.sync_interaction_info
 
       flash[:notice] = "We're talking with instagram right now"
       if request.path != loading_crush_index_path

@@ -54,31 +54,32 @@ class InstagramUser < ActiveRecord::Base
       order( "count desc" )
   end
 
-  def stale?
-    self.last_synced.nil? || self.last_synced < 12.hours.ago
-  end
+  [
+    :user_info, 
+    :feed_info, 
+    :interaction_info, 
+    :followers_info, 
+    :member_since, 
+    :user_likes
+  ].each do |attribute|
+    define_method :"#{attribute}_stale?" do
+      finished_at = "#{attribute}_finished_at"
+      attributes[finished_at].nil? || attributes[finished_at] < 12.hours.ago
+    end
 
-  def sync_needed?
-    stale? && state != 'queued'
-  end
+    define_method :"sync_#{attribute}_needed?" do
+      send( :"#{attribute}_stale?" ) && attributes["#{attribute}_state"] != "queued"
+    end
 
-  def sync_if_needed
-    if sync_needed?
-      sync!
+    define_method :"sync_#{attribute}" do
+      if send( "sync_#{attribute}_needed?" )
+        send( "sync_#{attribute}!" )
+      end
     end
   end
 
-  def sync!
-    update_attribute :state, "queued"
+  def sync_interaction_info!
+    update_attribute :interaction_info_state, "queued"
     UpdateUserFeedJob.perform_later( self.user.id )
-  end
-
-  def self.sync_feed_from_user user
-    if user.instagram_user.nil?
-      InstagramUser.create( user: user, username: user.instagram.nickname, state: "queued" )
-      user.reload
-    end
-
-    user.instagram_user.sync!
   end
 end

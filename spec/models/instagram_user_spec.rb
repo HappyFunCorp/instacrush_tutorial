@@ -45,17 +45,17 @@ RSpec.describe InstagramUser, type: :model do
   context "needing syncing" do
     it "a new object should be stale" do
       iu = create( :instagram_user )
-      expect( iu.stale? ).to be_truthy
+      expect( iu.interaction_info_stale? ).to be_truthy
     end
 
     it "an object synced more than 12 hours ago should be stale" do
-      iu = create( :instagram_user, last_synced: 13.hours.ago )
-      expect( iu.stale? ).to be_truthy
+      iu = create( :instagram_user, interaction_info_finished_at: 13.hours.ago )
+      expect( iu.interaction_info_stale? ).to be_truthy
     end
 
     it "an object synced 1 hours ago should not be stale" do
-      iu = create( :instagram_user, last_synced: 1.hour.ago )
-      expect( iu.stale? ).to be_falsey
+      iu = create( :instagram_user, interaction_info_finished_at: 1.hour.ago )
+      expect( iu.interaction_info_stale? ).to be_falsey
     end
   end
 
@@ -66,7 +66,9 @@ RSpec.describe InstagramUser, type: :model do
 
     it "should trigger a sync for a stale user" do
       assert_enqueued_with( job: UpdateUserFeedJob ) do
-        InstagramUser.sync_feed_from_user user
+        VCR.use_cassette 'instagram/user_sync' do
+          user.find_instagram_user.sync_interaction_info
+        end
       end
     end
   end

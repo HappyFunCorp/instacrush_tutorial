@@ -1,6 +1,6 @@
 class CrushController < ApplicationController
   before_filter :require_instagram_user, except: [:show]
-  before_filter :require_fresh_user, except: [:show]
+  before_filter :require_fresh_interactions, except: [:show]
 
   def index
     redirect_to Crush.find_for_user( current_user )
@@ -12,7 +12,7 @@ class CrushController < ApplicationController
 
   def loading
     iu = current_user.instagram_user
-    if iu.state == "synced"
+    if iu.interaction_info_state == "synced"
       redirect_to Crush.find_for_user( current_user )
     end
   end

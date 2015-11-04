@@ -42,7 +42,9 @@ RSpec.describe CrushController, :type => :controller do
 
     it "should queue up the syncing job when you get the index page" do
       assert_enqueued_with( job: UpdateUserFeedJob ) do
-        get :index
+        VCR.use_cassette 'instagram/user_sync' do
+          get :index
+        end
       end
       expect( response ).to redirect_to( loading_crush_index_path )
       assert_no_enqueued_jobs do
@@ -53,7 +55,9 @@ RSpec.describe CrushController, :type => :controller do
 
     it "should queue up the syncing job if you hit the loading page first" do
       assert_enqueued_with( job: UpdateUserFeedJob ) do
-        get :loading
+        VCR.use_cassette 'instagram/user_sync' do
+          get :loading
+        end
       end
       expect( response ).to have_http_status( 200 )
     end
@@ -64,8 +68,8 @@ RSpec.describe CrushController, :type => :controller do
 
   context "up-to-date user" do
     before( :each ) do
-      instagram_user.update_attribute( :last_synced, 1.hour.ago )
-      instagram_user.update_attribute( :state, 'synced' )
+      instagram_user.update_attribute( :interaction_info_finished_at, 1.hour.ago )
+      instagram_user.update_attribute( :interaction_info_state, 'synced' )
       user.reload
       allow_message_expectations_on_nil
       login_with user
@@ -111,8 +115,8 @@ RSpec.describe CrushController, :type => :controller do
       get :loading
       expect( response ).to have_http_status( 200 )
 
-      instagram_user.update_attribute( :last_synced, 1.hour.ago )
-      instagram_user.update_attribute( :state, "synced" )
+      instagram_user.update_attribute( :interaction_info_finished_at, 1.hour.ago )
+      instagram_user.update_attribute( :interaction_info_state, "synced" )
       user.reload
       get :loading
       crush.reload

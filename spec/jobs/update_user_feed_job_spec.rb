@@ -7,21 +7,21 @@ RSpec.describe UpdateUserFeedJob, type: :job do
  
   it "should create a job when requesting a synched user" do
     assert_enqueued_with( job: UpdateUserFeedJob ) do
-      expect( instagram_user.sync_if_needed ).to be_truthy
+      expect( instagram_user.sync_interaction_info ).to be_truthy
     end
 
-    expect( instagram_user.state ).to eq( 'queued' )
+    expect( instagram_user.interaction_info_state ).to eq( 'queued' )
   end
 
   it "should not double enqueue a job" do
     assert_enqueued_with( job: UpdateUserFeedJob ) do
-      expect( instagram_user.sync_if_needed ).to be_truthy
+      expect( instagram_user.sync_interaction_info ).to be_truthy
     end
 
-    expect( instagram_user.state ).to eq( 'queued' )
+    expect( instagram_user.interaction_info_state ).to eq( 'queued' )
 
     assert_no_enqueued_jobs do
-      expect( instagram_user.sync_if_needed ).to be_falsey
+      expect( instagram_user.sync_interaction_info ).to be_falsey
     end
   end
 
@@ -34,8 +34,8 @@ RSpec.describe UpdateUserFeedJob, type: :job do
 
     instagram_user.reload
 
-    expect( instagram_user.stale? ).to be_falsey
-    expect( instagram_user.state ).to eq( "synced" )
+    expect( instagram_user.interaction_info_stale? ).to be_falsey
+    expect( instagram_user.interaction_info_state ).to eq( "synced" )
     expect( InstagramMedia.count ).to_not eq(0)
   end
 end

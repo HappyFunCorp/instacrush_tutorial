@@ -4,6 +4,9 @@ class UpdateUserFeedJob < ActiveJob::Base
   def perform( user_id )
     user = User.find user_id
 
+    instagram_user = user.find_instagram_user
+    instagram_user.update_attribute( :interaction_info_started_at, Time.now )
+
     InstagramMedia.recent_feed_for_user user.instagram_client, user.find_instagram_user
 
     user.find_instagram_user.posts.each do |post|
@@ -13,8 +16,8 @@ class UpdateUserFeedJob < ActiveJob::Base
     user.reload
     
     instagram_user = user.instagram_user
-    instagram_user.state = "synced"
-    instagram_user.last_synced = Time.now
+    instagram_user.interaction_info_finished_at = Time.now
+    instagram_user.interaction_info_state = "synced"
     instagram_user.save
   end
 end
