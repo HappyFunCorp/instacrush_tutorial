@@ -97,4 +97,6 @@ gem 'activeadmin', github: 'activeadmin', branch: 'master'
 gem 'inherited_resources'
 gem 'dateslices'
 
-gem 'delayed_job_active_record'
+# gem 'delayed_job_active_record'
+gem 'sidekiq'
+gem 'sinatra', :require => nil

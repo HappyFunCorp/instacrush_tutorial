@@ -7,6 +7,12 @@ Rails.application.routes.draw do
   end
 
   devise_for :admin_users, ActiveAdmin::Devise.config
+# ?  require 'sinatra'
+  require 'sidekiq/web'
+  authenticate :admin_user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   ActiveAdmin.routes(self)
   resources :crush, only: [:index, :show], param: :slug do
     collection do
