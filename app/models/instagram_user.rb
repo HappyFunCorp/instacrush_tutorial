@@ -25,6 +25,12 @@ class InstagramUser < ActiveRecord::Base
     from_hash user_info, user
   end
 
+  def sync_user_info_from_instagram( instagram_client )
+    user_info = instagram_client.user( self.remote_id )
+    p user_info
+    InstagramUser.from_hash user_info
+  end
+
   def self.from_hash user_info, user = nil
     u = where( :username => user_info['username']).first_or_create
     u.user_id = user.id if user
@@ -71,22 +77,18 @@ class InstagramUser < ActiveRecord::Base
       send( :"#{attribute}_stale?" ) && attributes["#{attribute}_state"] != "queued"
     end
 
-    define_method :"sync_#{attribute}" do
+    define_method :"sync_#{attribute}" do |*args|
+      user_id = args.first || self.user.id
       if send( "sync_#{attribute}_needed?" )
-        send( "sync_#{attribute}!" )
+        send( "sync_#{attribute}!", user_id )
       end
     end
 
-    define_method :"sync_#{attribute}!" do
+    define_method :"sync_#{attribute}!" do |*args|
+      user_id = args.first || self.user.id
       update_attribute :"#{attribute}_queued_at", Time.now
       update_attribute :"#{attribute}_state", "queued"
-      eval( "Sync#{attribute.to_s.camelize}Job" ).perform_later( self.id, self.user.id )
+      eval( "Sync#{attribute.to_s.camelize}Job" ).perform_later( self.id, user_id )
     end
   end
-
-  # def sync_interaction_info!
-  #   update_attribute :interaction_info_queued_at, Time.now
-  #   update_attribute :interaction_info_state, "queued"
-  #   SyncInteractionInfoJob.perform_later( self.id, self.user.id )
-  # end
 end

@@ -12,8 +12,24 @@ class InstagramMedia < ActiveRecord::Base
   end
 
   def self.recent_feed_for_user( instagram_client, instagram_user )
-    instagram_client.user_recent_media( instagram_user.remote_id ).each do |media|
-      self.reify( media )
+    logger.debug "Pulling in recent feed for #{instagram_user.username}"
+    ret = instagram_client.user_recent_media( instagram_user.remote_id )
+
+    skipped = false
+    while !skipped
+      ret.each do |media|
+        if Time.at(media['created_time'].to_i) > 6.months.ago
+          self.reify( media )
+        else
+          logger.debug "Found a post too old #{Time.at(media['created_time'].to_i)}" if !skipped
+          skipped = true
+        end
+      end
+
+      if !skipped
+        logger.debug "Looking up next page of results"
+        ret = instagram_client.user_recent_media( instagram_user.remote_id, max_id: ret.pagination['next_max_id'] )
+      end
     end
   end
 
@@ -40,6 +56,38 @@ class InstagramMedia < ActiveRecord::Base
         interaction.created_at = Time.at( comment['created_time'].to_i )
       end
     end
+  end
+
+  def self.look_for_oldest( instagram_client, instagram_user )
+    logger.debug "look_for_oldest for #{instagram_user.username}"
+    start_year = 6
+    ret = []
+    while ret.length == 0 && start_year > 0
+      ret = instagram_client.user_recent_media( instagram_user.remote_id, max_timestamp: start_year.years.ago.to_i )
+      if ret.last
+        logger.debug "Latest is #{ret.last["created_time"]}"
+      else
+        logger.debug  "Nothing for #{start_year} years ago"
+      end
+      start_year -= 1
+    end
+
+    last_media = ret.last
+    logger.debug  "Latest is #{ret.last["created_time"]}"
+    while ret.last
+      ret = instagram_client.user_recent_media( instagram_user.remote_id, max_id: ret.pagination["next_max_id"], count: 50 )
+      logger.debug  "#{ret.length} results"
+      last_media = ret.last || last_media
+      logger.debug  "Latest is #{ret.last["created_time"]}" if ret.last
+    end
+
+    if last_media
+      logger.debug "Setting member_since to #{last_media["created_time"]}"
+      instagram_user.update_attribute( :member_since, Time.at(last_media["created_time"].to_i) )
+    else
+      logger.debug "No last_media found"
+    end
+    last_media
   end
 
   def load_interaction_data( instagram_client )

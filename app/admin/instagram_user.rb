@@ -7,6 +7,10 @@ ActiveAdmin.register InstagramUser  do
   filter :media_count
   filter :followed_count
   filter :following_count
+  filter :recent_posts_count
+  filter :recent_likes_count
+  filter :recent_comments_count
+  filter :member_since
   filter :last_synced
 
   index do
@@ -22,7 +26,11 @@ ActiveAdmin.register InstagramUser  do
     column :media_count
     column :followed_count
     column :following_count
-    column :last_synced
+    column :recent_posts_count
+    column :recent_likes_count
+    column :recent_comments_count
+
+    column :member_since
     column :created_at
     actions do |user|
       link_to "Sync", load_info_admin_instagram_user_path( user ), method: :put 

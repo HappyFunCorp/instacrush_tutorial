@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104214002) do
+ActiveRecord::Schema.define(version: 20151105001130) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -157,6 +157,10 @@ ActiveRecord::Schema.define(version: 20151104214002) do
     t.datetime "user_likes_queued_at"
     t.datetime "user_likes_started_at"
     t.datetime "user_likes_finished_at"
+    t.datetime "member_since"
+    t.integer  "recent_posts_count"
+    t.integer  "recent_likes_count"
+    t.integer  "recent_comments_count"
   end
 
   add_index "instagram_users", ["user_id"], name: "index_instagram_users_on_user_id"
