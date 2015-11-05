@@ -7,7 +7,7 @@ class SyncInteractionInfoJob < ActiveJob::Base
     instagram_user = InstagramUser.find( instagram_user_id )
     instagram_user.update_attribute( :interaction_info_started_at, Time.now )
 
-    InstagramMedia.recent_feed_for_user user.instagram_client, instagram_user
+    InstagramMedia.recent_feed_for_user user.instagram_client, instagram_user, true
 
     instagram_user.reload
 

@@ -11,7 +11,7 @@ class InstagramMedia < ActiveRecord::Base
     interactions.where( is_like: true )
   end
 
-  def self.recent_feed_for_user( instagram_client, instagram_user )
+  def self.recent_feed_for_user( instagram_client, instagram_user, comments = false )
     logger.debug "Pulling in recent feed for #{instagram_user.username}"
     ret = instagram_client.user_recent_media( instagram_user.remote_id )
 
@@ -19,7 +19,7 @@ class InstagramMedia < ActiveRecord::Base
     while !skipped
       ret.each do |media|
         if Time.at(media['created_time'].to_i) > 6.months.ago
-          self.reify( media )
+          self.reify( media, comments )
         else
           logger.debug "Found a post too old #{Time.at(media['created_time'].to_i)}" if !skipped
           skipped = true
@@ -29,11 +29,12 @@ class InstagramMedia < ActiveRecord::Base
       if !skipped
         logger.debug "Looking up next page of results"
         ret = instagram_client.user_recent_media( instagram_user.remote_id, max_id: ret.pagination['next_max_id'] )
+        skipped = true if ret.length == 0
       end
     end
   end
 
-  def self.reify( media )
+  def self.reify( media, save_comments = false )
     instagram_user = InstagramUser.from_hash media['user']
 
     p = where( media_id: media['id'] ).first_or_create
@@ -49,11 +50,13 @@ class InstagramMedia < ActiveRecord::Base
 
     p.save
 
-    media['comments']['data'].each do |comment|
-      commentor = InstagramUser.from_hash( comment['from'] )
-      InstagramInteraction.where( instagram_media_id: p.id, instagram_user_id: commentor.id, is_like: false ).first_or_create do |interaction|
-        interaction.comment = comment['text']
-        interaction.created_at = Time.at( comment['created_time'].to_i )
+    if save_comments
+      media['comments']['data'].each do |comment|
+        commentor = InstagramUser.from_hash( comment['from'] )
+        InstagramInteraction.where( instagram_media_id: p.id, instagram_user_id: commentor.id, is_like: false ).first_or_create do |interaction|
+          interaction.comment = comment['text']
+          interaction.created_at = Time.at( comment['created_time'].to_i )
+        end
       end
     end
   end
