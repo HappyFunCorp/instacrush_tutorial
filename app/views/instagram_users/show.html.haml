@@ -1,0 +1,46 @@
+.container
+  .row
+    .col-sm-3
+      = panel title: "Top Users" do
+        .panel-body
+          = nav as: :pills, layout: :stacked do
+            - @top_users.each do |top_user|
+              - user = @user_hash[top_user[:instagram_user_id].to_i]
+              = link_to user do
+                = user.username
+                %span.badge= top_user[:count]
+
+    .col-sm-9
+      .row
+        .col-sm-12
+          = panel title: "@#{@instagram_user.username}: #{@instagram_user.full_name}" do
+            .panel-body.user_info
+              .col-xs-6
+                = image_tag @instagram_user.profile_picture, class: "img-responsive"
+
+                = button_to "Sync", sync_instagram_user_path( @instagram_user ), method: :put, class: "btn btn-primary"
+
+                %table.table.table-striped.table-bordered
+                  %tr
+                    %th Data Point
+                    %th Stale?
+                    %th Sync Duration
+                  - [ :user_info, :feed_info, :interaction_info, :followers_info, :member_since, :user_likes ].each do |key|
+                    - started = @instagram_user.send( :"#{key}_started_at" )
+                    - finished = @instagram_user.send( :"#{key}_finished_at" )
+                    %tr
+                      %th= key.to_s
+                      %td= @instagram_user.send( :"#{key}_stale?" )
+                      %td
+                        - if started && finished
+                          = finished - started
+                        - elsif started
+                          Syncing in progress
+
+              .col-xs-6
+                %table.table.table-striped.table-bordered
+                  %tr
+                  - [ :username, :full_name, :media_count, :followed_count, :following_count, :member_since, :recent_posts_count, :recent_likes_count, :recent_comments_count ].each do |key|
+                    %tr
+                      %th= key.to_s
+                      %td= @instagram_user.send( key )

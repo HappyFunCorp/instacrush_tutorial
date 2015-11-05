@@ -78,10 +78,10 @@ RSpec.describe InstagramMedia, type: :model do
   context "comments" do
     before( :each ) do
       VCR.use_cassette 'instagram/recent_feed_for_user_with_interactions' do
-        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
-        # user.find_instagram_user.posts.each do |post|
-        #   post.load_interaction_data( user.instagram_client )
-        # end
+        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user, true )
+        user.find_instagram_user.posts.each do |post|
+          post.load_interaction_data( user.instagram_client )
+        end
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe InstagramMedia, type: :model do
   context "interactions" do
     before( :each ) do
       VCR.use_cassette 'instagram/recent_feed_for_user_with_interactions' do
-        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user )
+        InstagramMedia.recent_feed_for_user( user.instagram_client, user.find_instagram_user, true )
         user.find_instagram_user.posts.each do |post|
           post.load_interaction_data( user.instagram_client )
         end

@@ -18,10 +18,10 @@ RSpec.describe InstagramUser, type: :model do
     expect( iu.remote_id ).to eq( "509161" )
     expect( iu.username ).to eq( "wschenk" )
     expect( iu.full_name ).to eq( "Will Schenk" )
-    expect( iu.profile_picture ).to eq( "http://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-19/11374591_955491831180543_1527410442_a.jpg" )
-    expect( iu.media_count ).to eq( 680 )
-    expect( iu.followed_count ).to eq( 191 )
-    expect( iu.following_count ).to eq( 224 )
+    expect( iu.profile_picture ).to eq( "http://scontent.cdninstagram.com/hphotos-xta1/t51.2885-19/11374591_955491831180543_1527410442_a.jpg" )
+    expect( iu.media_count ).to eq( 684 )
+    expect( iu.followed_count ).to eq( 194 )
+    expect( iu.following_count ).to eq( 225 )
   end
 
   it "should create a user from a hash" do

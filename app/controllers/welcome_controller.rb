@@ -1,7 +1,7 @@
 class WelcomeController < ApplicationController
   def landing
     if current_user.present?
-      redirect_to crush_index_path
+      redirect_to current_user.find_instagram_user
     end
   end
 

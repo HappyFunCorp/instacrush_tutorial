@@ -63,16 +63,16 @@ class InstagramMedia < ActiveRecord::Base
 
   def self.look_for_oldest( instagram_client, instagram_user )
     logger.debug "look_for_oldest for #{instagram_user.username}"
-    start_year = 6
+    start_month = 6*12 # Start looking 6 years ago
     ret = []
-    while ret.length == 0 && start_year > 0
-      ret = instagram_client.user_recent_media( instagram_user.remote_id, max_timestamp: start_year.years.ago.to_i )
+    while ret.length == 0 && start_month > 0
+      ret = instagram_client.user_recent_media( instagram_user.remote_id, max_timestamp: start_month.months.ago.to_i )
       if ret.last
         logger.debug "Latest is #{ret.last["created_time"]}"
       else
-        logger.debug  "Nothing for #{start_year} years ago"
+        logger.debug  "Nothing for #{start_month/12} years ago"
       end
-      start_year -= 1
+      start_month -= 6
     end
 
     last_media = ret.last
