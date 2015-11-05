@@ -1,0 +1,22 @@
+.container
+  .row
+    %h1
+      Recently updated users
+      %small
+        to know what's going on
+
+    = button_to "Your stats", current_user.find_instagram_user, class: "btn btn-primary", method: :get
+
+    %table.table.table-striped.table-bordered
+      %tr
+        %th ID
+        %th Username
+        - [ :user_info, :feed_info, :interaction_info, :followers_info, :member_since, :user_likes ].each do |key|
+          %th= key
+
+      - @users.each do |user|
+        %tr
+          %td= user.id
+          %td= link_to user.username, user
+          - [ :user_info, :feed_info, :interaction_info, :followers_info, :member_since, :user_likes ].each do |key|
+            %td= user.send( :"#{key}_stale?" ) == false

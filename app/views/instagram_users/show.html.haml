@@ -1,46 +1,169 @@
 .container
   .row
-    .col-sm-3
-      = panel title: "Top Users" do
+    .col-sm-6.col-md-4
+      = panel title: "@#{@instagram_user.username}: #{@instagram_user.full_name}" do
+        .panel-body.user_info
+          = image_tag @instagram_user.profile_picture, class: "img-responsive"
+
+          %p
+            = button_to "Sync", sync_instagram_user_path( @instagram_user ), method: :put, class: "btn btn-primary"
+
+            = button_to "Instagram", "http://instagram.com/#{@instagram_user.username}", method: :get, class: "btn btn-info"
+
+    .col-sm-6.col-md-4
+      = panel title: "Data Syncing Status" do
+        .panel-body.user_info
+          %table.table.table-striped.table-bordered
+            %tr
+              %th Data Point
+              %th Stale?
+              %th Sync Duration
+            - [ :user_info, :feed_info, :interaction_info, :followers_info, :member_since, :user_likes ].each do |key|
+              - started = @instagram_user.send( :"#{key}_started_at" )
+              - finished = @instagram_user.send( :"#{key}_finished_at" )
+              %tr
+                %th= key.to_s
+                %td= @instagram_user.send( :"#{key}_stale?" )
+                %td
+                  - if @instagram_user.send( :"#{key}_state") == 'queued'
+                    Queued for processing
+                  - elsif started && finished
+                    = finished - started
+                  - elsif started
+                    Syncing in progress
+
+    .col-sm-6.col-md-4
+      = panel title: "Computed Stats" do
+        .panel-body.user_info
+          %table.table.table-striped.table-bordered
+            %tr
+            - [ :username, :full_name, :media_count, :followed_count, :following_count, :member_since, :recent_posts_count, :recent_likes_count, :recent_comments_count ].each do |key|
+              %tr
+                %th= key.to_s
+                %td= @instagram_user.send( key )
+
+
+  .row
+    .col-sm-6.col-md-4
+      = panel title: "Top Interactions" do
         .panel-body
           = nav as: :pills, layout: :stacked do
-            - @top_users.each do |top_user|
+            - @top_interactors.each do |top_user|
               - user = @user_hash[top_user[:instagram_user_id].to_i]
               = link_to user do
                 = user.username
                 %span.badge= top_user[:count]
 
-    .col-sm-9
-      .row
-        .col-sm-12
-          = panel title: "@#{@instagram_user.username}: #{@instagram_user.full_name}" do
-            .panel-body.user_info
-              .col-xs-6
-                = image_tag @instagram_user.profile_picture, class: "img-responsive"
+    .col-sm-6.col-md-4
+      = panel title: "Oldest Followers" do
+        .panel-body
+          %table.table.table-striped.table-bordered
+            %tr
+              %th User
+              %th Followers
+              %th Likes
 
-                = button_to "Sync", sync_instagram_user_path( @instagram_user ), method: :put, class: "btn btn-primary"
+            - @oldest_followers.each do |user|
+              %tr
+                %td
+                  = link_to user.username, user
+                  %br
+                  = user.member_since.strftime( "%Y-%m-%d")
+                %td= user.followed_count
+                %td= user.recent_likes_count
 
-                %table.table.table-striped.table-bordered
-                  %tr
-                    %th Data Point
-                    %th Stale?
-                    %th Sync Duration
-                  - [ :user_info, :feed_info, :interaction_info, :followers_info, :member_since, :user_likes ].each do |key|
-                    - started = @instagram_user.send( :"#{key}_started_at" )
-                    - finished = @instagram_user.send( :"#{key}_finished_at" )
-                    %tr
-                      %th= key.to_s
-                      %td= @instagram_user.send( :"#{key}_stale?" )
-                      %td
-                        - if started && finished
-                          = finished - started
-                        - elsif started
-                          Syncing in progress
+    .col-sm-6.col-md-4
+      = panel title: "Newest Followers" do
+        .panel-body
+          %table.table.table-striped.table-bordered
+            %tr
+              %th User
+              %th Followers
+              %th Likes
 
-              .col-xs-6
-                %table.table.table-striped.table-bordered
-                  %tr
-                  - [ :username, :full_name, :media_count, :followed_count, :following_count, :member_since, :recent_posts_count, :recent_likes_count, :recent_comments_count ].each do |key|
-                    %tr
-                      %th= key.to_s
-                      %td= @instagram_user.send( key )
+            - @newest_followers.each do |user|
+              %tr
+                %td
+                  = link_to user.username, user
+                  %br
+                  = user.member_since.strftime( "%Y-%m-%d")
+                %td= user.followed_count
+                %td= user.recent_likes_count
+
+    .col-sm-6.col-md-4
+      = panel title: "Influencers: Likes" do
+        .panel-body
+          %table.table.table-striped.table-bordered
+            %tr
+              %th User
+              %th Followers
+              %th Likes
+
+            - @influencers_likes.each do |user|
+              %tr
+                %td
+                  = link_to user.username, user
+                  %br
+                  = user.member_since.strftime( "%Y-%m-%d") if user.member_since
+                %td= user.followed_count
+                %td= user.recent_likes_count
+
+    .col-sm-6.col-md-4
+      = panel title: "Influencers: Followers" do
+        .panel-body
+          %table.table.table-striped.table-bordered
+            %tr
+              %th User
+              %th Followers
+              %th Likes
+
+            - @influencers_followers.each do |user|
+              %tr
+                %td
+                  = link_to user.username, user
+                  %br
+                  = user.member_since.strftime( "%Y-%m-%d") if user.member_since
+                %td= user.followed_count
+                %td= user.recent_likes_count
+
+    .col-sm-6.col-md-4
+      = panel title: "Influencers: Likes per Post" do
+        .panel-body
+          %table.table.table-striped.table-bordered
+            %tr
+              %th User
+              %th Posts
+              %th Ratio
+
+            - @influencers_likes_per_post.each do |user|
+              %tr
+                %td
+                  = link_to user.username, user
+                  %br
+                  = user.member_since.strftime( "%Y-%m-%d") if user.member_since
+                %td= user.recent_posts_count
+                %td= user.recent_likes_count / user.recent_posts_count
+
+
+    - @top_posts.each do |post|
+      .col-sm-6.col-md-4
+        .thumbnail
+          = link_to post.link do
+            = image_tag post.standard_url
+
+        .caption
+          %p
+            = link_to post.link do
+              = image_tag post.standard_url
+              = post.likes_count
+              likes,
+              = time_ago_in_words post.created_at
+              ago.
+
+            Not liked by:
+            = nav as: :pills, layout: :stacked do
+              - (@top_likers - post.likes.pluck( :instagram_user_id ))[0..5].each do |user_id|
+                - user = InstagramUser.find user_id
+                = link_to user.username, user
+              
+

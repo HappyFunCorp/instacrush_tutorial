@@ -6,6 +6,8 @@ class InstagramUser < ActiveRecord::Base
 
   has_many :posts, class_name: 'InstagramMedia'
   has_many :interactions, through: :posts, class_name: "InstagramInteraction"
+  has_many :relationships, class_name: 'InstagramRelationship'
+  has_many :subject_users, class_name: "InstagramUser", through: :relationships
 
   def slug
     username

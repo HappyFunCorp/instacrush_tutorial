@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151105001130) do
+ActiveRecord::Schema.define(version: 20151105150900) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -121,6 +121,19 @@ ActiveRecord::Schema.define(version: 20151105001130) do
   end
 
   add_index "instagram_media", ["instagram_user_id"], name: "index_instagram_media_on_instagram_user_id"
+
+  create_table "instagram_relationships", force: :cascade do |t|
+    t.integer  "instagram_user_id"
+    t.integer  "subject_user_id"
+    t.boolean  "followed_by"
+    t.boolean  "follows"
+    t.boolean  "interacted"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "instagram_relationships", ["instagram_user_id"], name: "index_instagram_relationships_on_instagram_user_id"
+  add_index "instagram_relationships", ["subject_user_id"], name: "index_instagram_relationships_on_subject_user_id"
 
   create_table "instagram_users", force: :cascade do |t|
     t.integer  "user_id"
